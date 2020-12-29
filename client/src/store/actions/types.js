@@ -1,0 +1,8 @@
+export const SET_USER='SET_USER'
+export const USER_ERROR='USER_ERROR'
+export const SET_MESSAGE='SET_MESSAGE'
+export const LOAD_CATEGORIES='LOAD_CATEGORIES'
+export const SET_GAMES='SET_GAMES'
+export const LOAD_GAMES='LOAD_GAMES'
+export const SET_GAME='SET_GAME'
+export const GAME_ERRORS='GAME_ERRORS'
