@@ -59,7 +59,7 @@ export const login = (user, history) => {
           }
       })
       .then(()=>{
-        history.goBack();
+        history.push(`/dashboard`)
       })
       .catch((errors) => {
         if (errors.response.status === 422) {
