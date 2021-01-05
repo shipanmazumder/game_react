@@ -53,7 +53,7 @@ exports.postLogin = (req, res, next) => {
         if (doMatch) {
           var token = jsonwebtoken.sign({ data: user }, privateKey, {
             // algorithm: "RS256",
-            expiresIn: 60,
+            expiresIn: 60*60,
           });
           var data = {
             status: true,

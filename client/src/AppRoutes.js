@@ -6,6 +6,7 @@ import PrivateRoute from "./components/PrivateRoute";
 const Login = lazy(() => import("./pages/login/Login"));
 const Dashboard = lazy(() => import("./pages/dashboard/Dashboard"));
 const Game = lazy(() => import("./pages/game/Game"));
+const BotMessage = lazy(() => import("./pages/botmessage/BotMessage"));
 
 class AppRoutes extends Component {
   render() {
@@ -16,6 +17,7 @@ class AppRoutes extends Component {
             <PrivateRoute path="/" component={Dashboard} exact />
             <PrivateRoute path="/dashboard" component={Dashboard} exact  />
             <PrivateRoute path="/game" component={Game}  exact />
+            <PrivateRoute path="/botMessage" component={BotMessage}  exact />
           </Switch>
       </Suspense>
     );

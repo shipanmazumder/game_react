@@ -5,7 +5,8 @@ const init={
     game:{},
     categories:[],
     message:"",
-    errors:{}
+    errors:{},
+    isLoading:true,
 }
 const gameReducer=(state=init,action)=>{
     switch (action.type) {
@@ -13,12 +14,15 @@ const gameReducer=(state=init,action)=>{
             return {
                 ...state,
                 errors:{},
+                isLoading:false,
                 categories:action.payload.categories
             }
         case Types.LOAD_GAMES:
             return {
                 ...state,
                 errors:{},
+                message:"",
+                isLoading:false,
                 games:action.payload.games
             }
         case Types.SET_GAMES:
@@ -28,6 +32,7 @@ const gameReducer=(state=init,action)=>{
                 ...state,
                 games:gamess,
                 errors:{},
+                isLoading:false,
                 message:action.payload.message
             }
         case Types.SET_GAME:
@@ -35,9 +40,18 @@ const gameReducer=(state=init,action)=>{
                 ...state,
                 game:action.payload.game
             }
+        case Types.UPDATE_GAME:
+            let games = [...state]
+            return games.map(game => {
+                if (game._id === action.payload.game._id) {
+                    return action.payload.transaction
+                }
+                return game
+            })
         case Types.GAME_ERRORS:
             return {
                 ...state,
+                isLoading:false,
                 errors:action.payload.errors
             }
         default:

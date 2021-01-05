@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const passport = require("passport");
+const path = require("path");
 const apiRoute = require("./routes/api");
 
 //setup express app
@@ -23,6 +24,14 @@ app.use(passport.initialize())
 require('./passport')(passport)
 //initialize routes
 app.use("/api/",apiRoute);
+
+//static file
+if(process.env.NODE_ENV==="production"){
+  app.use(express.static('client/build'));
+  app.get('*',(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'client','build','index.html'));
+  })
+}
 //error handling middleware
 app.use((error, req, res, next) => {
   console.log(error);

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ViewGame from "../../components/game/ViewGame";
 import AddGame from './../../components/game/AddGame';
 import UpdateGame from './../../components/game/UpdateGame';
-class Game extends Component {
+class BotMessage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,4 +44,4 @@ class Game extends Component {
     );
   }
 }
-export default (Game);
+export default (BotMessage);

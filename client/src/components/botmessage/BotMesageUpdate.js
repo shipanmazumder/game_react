@@ -6,7 +6,7 @@ import { catgeories, gameUpdate } from "./../../store/actions/gameAction";
 import SuccessMessage from "./../../components/message/SuccessMessage";
 import { Spinner } from "./../../components/shared/Spinner";
 import { withRouter } from 'react-router-dom';
-class UpdateGame extends Component {
+class BotMessageUpdate extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -328,4 +328,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default withRouter(connect(mapStateToProps, { catgeories, gameUpdate })(UpdateGame));
+export default withRouter(connect(mapStateToProps, { catgeories, gameUpdate })(BotMessageUpdate));

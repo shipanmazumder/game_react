@@ -82,6 +82,37 @@ export const gameAdd = (game, history) => {
             message:"Game Add Success"
           },
         });
+        return res;
+      })
+      .then((res)=>{
+        history.push("/game");
+      })
+      .catch((errors) => {
+        if (errors.response.status === 422) {
+            dispatch({
+                type: Types.GAME_ERRORS,
+                payload: {
+                  errors: errors.response.data.errors,
+                },
+              });
+        } else {
+        }
+      });
+  };
+};
+export const gameUpdate = (game, history) => {
+  return (dispatch) => {
+    axios
+      .post(`${API}/api/update-game`, game)
+      .then((res) => {
+        dispatch({
+          type: Types.UPDATE_GAME,
+          payload: {
+            game:res.data.data,
+            message:"Game Update Success"
+          },
+        });
+        return res;
       })
       .then((res)=>{
         history.push("/game");

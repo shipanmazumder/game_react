@@ -9,6 +9,15 @@ const gameValidate = [
     .isLength({ max: 6 })
     .withMessage("The game short code may not be greater than 6 character")
     .custom((value, { req }) => {
+      if(req.body._id){
+        return Game.findOne({ game_short_code: value,_id:{$nin:[req.body._id]} }).then((game) => {
+          if (game) {
+            return Promise.reject(
+              "Game Short Code exists already, please pick a different one."
+            );
+          }
+        });
+      }
       return Game.findOne({ game_short_code: value }).then((game) => {
         if (game) {
           return Promise.reject(
@@ -22,6 +31,15 @@ const gameValidate = [
     .isLength({ max: 20 })
     .withMessage("The app id may not be greater than 20 character")
     .custom((value, { req }) => {
+      if(req.body._id){
+        return Game.findOne({ app_id: value,_id:{$nin:[req.body._id]} }).then((game) => {
+          if (game) {
+            return Promise.reject(
+              "App id exists already, please pick a different one."
+            );
+          }
+        });
+      }
       return Game.findOne({ app_id: value }).then((game) => {
         if (game) {
           return Promise.reject(

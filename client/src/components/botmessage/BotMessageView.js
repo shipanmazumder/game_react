@@ -5,7 +5,7 @@ import SuccessMessage from "./../../components/message/SuccessMessage";
 import { Spinner } from "./../../components/shared/Spinner";
 import { Button, Table } from "react-bootstrap";
 import { withRouter } from 'react-router-dom';
-class ViewGame extends Component {
+class BotMessageView extends Component {
   constructor() {
     super();
     this.state = {
@@ -96,4 +96,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default withRouter(connect(mapStateToProps, { games })(ViewGame));
+export default withRouter(connect(mapStateToProps, { games })(BotMessageView));

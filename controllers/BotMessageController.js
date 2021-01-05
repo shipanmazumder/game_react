@@ -5,32 +5,44 @@ const { validationResult } = require("express-validator");
 const {validationError} = require("../util/error");
 const {response} = require("../util/responseFormat");
 
-exports.getGame = (req, res, next) => {
-  Game.find()
-    .populate({ path: "categoryId", select: 'name' })
-    .sort({name:1})
+exports.getBotMessage = (req, res, next) => {
+   let game_id=req.query.game_id;
+  Game.findOne({_id:game_id})
     .then((result) => {
-      response(res, true, 200, "Game", result);
+      response(res, true, 200, "Bot Messages", result);
     })
     .catch((err) => {
-      console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
     });
 };
-exports.postGame = (req, res, next) => {
+exports.postBotMessage = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return validationError(res,errors)
   }
-  req.body.categoryId = mongoose.Types.ObjectId(req.body.categoryId);
-  req.body.game_unique_id = uuidv4();
-  let game = new Game(req.body);
-  game
-    .save()
+  let game_id=req.query.game_id;
+  Game.findOne({_id:game_id})
     .then((result) => {
-       response(res, true, 200, "Game Add Successfull", result);
+        if(!result){
+            return response(res, false, 200, "No result found", result);
+        }
+        let newMessage={
+            title:req.body.title,
+            subtitle:req.body.subtitle,
+            image_url:req.body.image_url,
+            message_time:req.body.message_time,
+            button_title:req.body.button_title,
+            data:req.body.data,
+            position:req.body.position,
+            status:req.body.status
+        };
+        let updateMessages=result.botMessages;
+        oldMessages.push(newMessage);
+        result.botMessages=oldMessages
+        result.save();
+        response(res, true, 200, "Game", result);
     })
     .catch((err) => {
       const error = new Error(err);
@@ -38,7 +50,7 @@ exports.postGame = (req, res, next) => {
       return next(error);
     });
 };
-exports.updateGame = (req, res, next) => {
+exports.updateBotMessage = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return validationError(res,errors)
