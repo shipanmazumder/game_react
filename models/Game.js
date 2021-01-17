@@ -7,18 +7,18 @@ const BotMessages=new Schema({
         type:String,
         required:true
     },
-    subtitle:{
+    subTitle:{
         type:String
     },
-    image_url:{
+    imageUrl:{
         type:String,
         required:true
     },
-    message_time:{
+    messageTime:{
         type:String,
         required:true
     },
-    button_title:{
+    buttonTitle:{
         type:String
     },
     data:{
@@ -26,7 +26,8 @@ const BotMessages=new Schema({
         required:true
     },
     position:{
-        type:Number
+        type:Number,
+        required:true
     },
     status:{
         type:Boolean,

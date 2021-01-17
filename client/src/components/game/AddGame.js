@@ -28,20 +28,6 @@ class AddGame extends Component {
     };
   }
   static getDerivedStateFromProps(nextProps, prevState) {
-    if(!nextProps.game.errors){
-      this.setState({
-        game: {
-          name: "",
-          game_access_token: "",
-          game_short_code: "",
-          game_verify_token: "",
-          categoryId: "",
-          description: "",
-          app_secret: "",
-          app_id: "",
-        },
-      });
-    }
     if (
       JSON.stringify(nextProps.game.errors) !== JSON.stringify(prevState.errors)
     ) {

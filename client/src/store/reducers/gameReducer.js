@@ -41,13 +41,19 @@ const gameReducer=(state=init,action)=>{
                 game:action.payload.game
             }
         case Types.UPDATE_GAME:
-            let games = [...state]
-            return games.map(game => {
+            let games = [...state.games]
+            let newGames=games.map(game => {
                 if (game._id === action.payload.game._id) {
-                    return action.payload.transaction
+                    return action.payload.game
                 }
                 return game
-            })
+            });
+            return{
+                ...state,
+                isLoading:false,
+                games:newGames,
+                message:action.payload.message
+            }
         case Types.GAME_ERRORS:
             return {
                 ...state,

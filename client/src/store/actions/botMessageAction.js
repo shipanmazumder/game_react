@@ -3,24 +3,24 @@ import { removeCookie } from "../../utils/auth";
 import * as Types from "../actions/types";
 import { API } from "./../../config";
 
-export const catgeories = (history) => {
+export const getBotMessage = (history,game_id) => {
   return (dispatch) => {
     axios
-      .get(`${API}/api/categories`)
+      .get(`${API}/api/bot-messages?game_id=${game_id}`)
       .then((res) => {
         let result = res.data;
         if (result.code === 200) {
           dispatch({
-            type: Types.LOAD_CATEGORIES,
+            type: Types.LOAD_BOT_MESSAGE,
             payload: {
-              categories: result.data,
+              botMessages: result.data.botMessages,
             },
           });
         } else {
           dispatch({
-            type: Types.LOAD_CATEGORIES,
+            type: Types.LOAD_BOT_MESSAGE,
             payload: {
-              categories: [],
+              botMessages: [],
               message: result.message,
             },
           });
@@ -42,66 +42,28 @@ export const catgeories = (history) => {
       });
   };
 };
-export const games = (history) => {
+export const botMessageAdd = (botMessage,game_id, history) => {
   return (dispatch) => {
     axios
-      .get(`${API}/api/games`)
-      .then((res) => {
-        let result = res.data;
-        if (result.code === 200) {
-          dispatch({
-            type: Types.LOAD_GAMES,
-            payload: {
-              games: result.data,
-            },
-          });
-        } else {
-          dispatch({
-            type: Types.LOAD_GAMES,
-            payload: {
-              games: [],
-            },
-          });
-        }
-      })
-      .catch((errors) => {
-        try {
-          if (errors.response.status === 401) {
-            removeCookie("token");
-            dispatch({
-              type: Types.SET_USER,
-              payload: {
-                isAuth: false,
-                user: {},
-              },
-            });
-          }
-        } catch (error) {}
-      });
-  };
-};
-export const gameAdd = (game, history) => {
-  return (dispatch) => {
-    axios
-      .post(`${API}/api/game-add`, game)
+      .post(`${API}/api/add-bot-message?game_id=${game_id}`, botMessage)
       .then((res) => {
         dispatch({
-          type: Types.SET_GAMES,
+          type: Types.ADD_BOT_MESSAGE,
           payload: {
-            games: res.data.data,
-            message: "Game Add Success",
+            botMessage: res.data.data.botMessages,
+            message: "Bot Message Add Success",
           },
         });
         return res;
       })
       .then((res) => {
-        history.push("/game");
+        history.push("/botMessage");
       })
       .catch((errors) => {
         try {
           if (errors.response.status === 422) {
             dispatch({
-              type: Types.GAME_ERRORS,
+              type: Types.BOT_MESSAGE_ERRORS,
               payload: {
                 errors: errors.response.data.errors,
               },

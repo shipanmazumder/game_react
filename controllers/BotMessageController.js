@@ -30,21 +30,21 @@ exports.postBotMessage = (req, res, next) => {
         }
         let newMessage={
             title:req.body.title,
-            subtitle:req.body.subtitle,
-            image_url:req.body.image_url,
-            message_time:req.body.message_time,
-            button_title:req.body.button_title,
+            subTitle:req.body.subTitle,
+            imageUrl:req.body.imageUrl,
+            messageTime:req.body.messageTime,
+            buttonTitle:req.body.buttonTitle,
             data:req.body.data,
-            position:req.body.position,
-            status:req.body.status
+            position:parseInt(req.body.position),
         };
         let updateMessages=result.botMessages;
-        oldMessages.push(newMessage);
-        result.botMessages=oldMessages
+        updateMessages.push(newMessage);
+        result.botMessages=updateMessages
         result.save();
         response(res, true, 200, "Game", result);
     })
     .catch((err) => {
+      console.log(err)
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);

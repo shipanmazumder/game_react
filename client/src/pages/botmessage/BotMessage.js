@@ -1,47 +1,68 @@
 import React, { Component } from "react";
-import ViewGame from "../../components/game/ViewGame";
-import AddGame from './../../components/game/AddGame';
-import UpdateGame from './../../components/game/UpdateGame';
+import GameView from "../../components/botmessage/GameView";
+import BotMessageAdd from "../../components/botmessage/BotMessageAdd";
+import BotMesageUpdate from "../../components/botmessage/BotMesageUpdate";
+import BotMessageView from './../../components/botmessage/BotMessageView';
+
 class BotMessage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAdd:false,
-      isEdit:false,
-      isView:true,
-      game:{}
+      isAdd: false,
+      isEdit: false,
+      isView: true,
+      isBotMessageView: false,
+      game_id: "",
     };
   }
-  handleGame=(action)=>{
+  botMessageView = (game_id) => {
     this.setState({
-      isAdd:action==="add"?true:false,
-      isEdit:action==="edit"?true:false,
-      isView:action==="view"?true:false
+      game_id: game_id,
+      isAdd: false,
+      isEdit: false,
+      isView: false,
+      isBotMessageView: true
+    });
+  };
+  botMessageAdd = (game_id) => {
+    this.setState({
+      game_id: game_id,
+      isAdd: true,
+      isEdit: false,
+      isView: false,
+      isBotMessageView: false
+    });
+  };
+  viewGames=()=>{
+    this.setState({
+      isAdd: false,
+      isEdit: false,
+      isView: true,
+      isBotMessageView: false
     });
   }
-  updateGame=(value)=>{
-   this.setState({
-     game:value,
-    isAdd:false,
-    isEdit:true,
-    isView:false
-  });
-  }
   render() {
-    let { isAdd,isEdit,isView } = this.state;
+    let { isAdd, isEdit, isView,isBotMessageView } = this.state;
     return (
       <div>
-        {
-          isAdd?<AddGame handleGame={this.handleGame}/>:""
-        }
-        {
-          (isEdit&&this.state.game!=="")?<UpdateGame updateGame={this.state.game} handleGame={this.handleGame}/>:""
-        }
-        {
-          isView?<ViewGame  updateGame={this.updateGame} handleGame={this.handleGame} />:""
-        }
+        {isAdd ? <BotMessageAdd viewGames={this.viewGames} game_id={this.state.game_id} botMessageAdd={this.botMessageAdd} /> : ""}
+        {isBotMessageView ? <BotMessageView viewGames={this.viewGames} game_id={this.state.game_id} /> : ""}
+        {isEdit && this.state.game !== "" ? (
+          <BotMesageUpdate
+          />
+        ) : (
+          ""
+        )}
+        {isView ? (
+          <GameView
+          botMessageAdd={this.botMessageAdd}
+          botMessageView={this.botMessageView}
+          />
+        ) : (
+          ""
+        )}
       </div>
     );
   }
 }
-export default (BotMessage);
+export default BotMessage;

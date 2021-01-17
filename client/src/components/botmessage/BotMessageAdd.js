@@ -1,326 +1,277 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button, Form } from "react-bootstrap";
-import Select from "react-select";
-import { catgeories, gameAdd } from "./../../store/actions/gameAction";
 import SuccessMessage from "./../../components/message/SuccessMessage";
-import { Spinner } from './../../components/shared/Spinner';
-import { withRouter } from 'react-router-dom';
+import { Spinner } from "./../../components/shared/Spinner";
+import { withRouter } from "react-router-dom";
+import { botMessageAdd } from "../../store/actions/botMessageAction";
+
 class BotMessageAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading:true,
-      selectedOption: null,
-      stateCategories: [],
-      game: {
-        name: "",
-        game_access_token: "",
-        game_short_code: "",
-        game_verify_token: "",
-        categoryId: "",
-        description: "",
-        app_secret: "",
-        app_id: "",
+      isLoading: true,
+      botMessage: {
+        title: "",
+        subTitle: "",
+        buttonTitle: "",
+        imageUrl: "",
+        messageTime: "",
+        position: "",
+        data: "",
       },
       message: "",
       errors: {},
     };
   }
   static getDerivedStateFromProps(nextProps, prevState) {
-    if(!nextProps.game.errors){
-      this.setState({
-        game: {
-          name: "",
-          game_access_token: "",
-          game_short_code: "",
-          game_verify_token: "",
-          categoryId: "",
-          description: "",
-          app_secret: "",
-          app_id: "",
-        },
-      });
-    }
     if (
-      JSON.stringify(nextProps.game.errors) !== JSON.stringify(prevState.errors)
+      JSON.stringify(nextProps.botMessage.errors) !==
+      JSON.stringify(prevState.errors)
     ) {
       return {
-        isLoading:false,
-        errors: nextProps.game.errors,
-        message: nextProps.game.message,
-        stateCategories: nextProps.game.categories.map((category) => ({
-          value: category._id,
-          label: category.name,
-        })),
+        isLoading: false,
+        errors: nextProps.botMessage.errors,
+        message: nextProps.botMessage.message,
       };
     } else {
       return {
-        isLoading:false,
-        message: nextProps.game.message,
-        stateCategories: nextProps.game.categories.map((category) => ({
-          value: category._id,
-          label: category.name,
-        })),
+        isLoading: false,
+        message: nextProps.botMessage.message,
       };
     }
   }
   async componentDidMount() {
-   await this.getCategories();
+    this.setState({
+      isLoading:false
+    })
   }
-   submitHandaler =async (event) => {
+  viewGames = () => {
+    this.props.viewGames();
+  };
+  submitHandaler = async (event) => {
     event.preventDefault();
     this.setState({
-      isLoading:true
-     })
-    let { game } = this.state;
-    await this.props.gameAdd(game, this.props.history);
-   
+      isLoading: true,
+    });
+    let { botMessage } = this.state;
+    await this.props.botMessageAdd(
+      botMessage,
+      this.props.game_id,
+      this.props.history
+    );
+    this.setState({
+      message:"Bot Message Add Success",
+    });
   };
   changeHandaler = (event) => {
     const newState = {
-      ...this.state.game,
+      ...this.state.botMessage,
       [event.target.name]: event.target.value,
     };
     this.setState({
-      game: newState,
+      botMessage: newState,
     });
   };
-  handleChange = (selectedOption) => {
-    const newState = {
-      ...this.state.game,
-      categoryId: selectedOption.value,
-    };
-    this.setState({
-      selectedOption: selectedOption,
-      game: newState,
-    });
+
+  viewGames = () => {
+    this.props.viewGames();
   };
-  getCategories() {
-    this.props.catgeories(this.props.history);
-  }
-  getGames() {
-    this.props.games(this.props.history);
-  }
-  handleGame=()=>{
-    this.props.handleGame("view");     
-  }
   render() {
-    let { stateCategories, selectedOption, errors, message,isLoading } = this.state;
+    let { errors, message, isLoading } = this.state;
 
     let {
-      name,
-      game_short_code,
-      game_access_token,
-      game_verify_token,
-      app_id,
-      app_secret,
-      description,
-    } = this.state.game;
-    if(isLoading){
-        return <Spinner />
-      }else{
-        return (
-          <div>
-            <div className="page-header">
-              <h3 className="page-title"> Manage Game </h3>
-              <nav aria-label="breadcrumb">
-                <Button onClick={this.handleGame}>View Games</Button>
-              </nav>
-            </div>
-            <div className="row">
-              <div className="col-md-12 grid-margin stretch-card">
-                <div className="card">
-                  <div className="card-body">
-                    <SuccessMessage message={message} />
-                    <Form className="forms-sample " onSubmit={this.submitHandaler}>
-                      <div className="row">
-                        <div className="col-md-4">
-                          <Form.Group>
-                            <label htmlFor="name">Game Name</label>
-                            <Form.Control
-                              type="text"
-                              id="name"
-                              placeholder="Game Name"
-                              size="lg"
-                              name="name"
-                              value={name}
-                              isInvalid={errors.name}
-                              onChange={this.changeHandaler}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              <strong>{errors.name ? errors.name.msg : ""}</strong>
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                        <div className="col-md-4">
-                          <Form.Group>
-                            <label htmlFor="game_short_code">Game Short Code</label>
-                            <Form.Control
-                              type="text"
-                              id="game_short_code"
-                              name="game_short_code"
-                              value={game_short_code}
-                              placeholder="Game Short Code"
-                              size="lg"
-                              isInvalid={errors.game_short_code}
-                              onChange={this.changeHandaler}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              <strong>
-                                {errors.game_short_code
-                                  ? errors.game_short_code.msg
-                                  : ""}
-                              </strong>
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                        <div className="col-md-4">
-                          <Form.Group>
-                            <label htmlFor="app_id">App ID</label>
-                            <Form.Control
-                              type="text"
-                              id="app_id"
-                              placeholder="App ID"
-                              size="lg"
-                              name="app_id"
-                              value={app_id}
-                              isInvalid={errors.app_id}
-                              onChange={this.changeHandaler}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              <strong>
-                                {errors.app_id ? errors.app_id.msg : ""}
-                              </strong>
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                        <div className="col-md-4">
-                          <Form.Group>
-                            <label htmlFor="app_secret">App Secret</label>
-                            <Form.Control
-                              type="text"
-                              id="app_secret"
-                              placeholder="App Secret"
-                              size="lg"
-                              name="app_secret"
-                              value={app_secret}
-                              isInvalid={errors.app_secret}
-                              onChange={this.changeHandaler}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              <strong>
-                                {errors.app_secret ? errors.app_secret.msg : ""}
-                              </strong>
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                        <div className="col-md-4">
-                          <Form.Group>
-                            <label htmlFor="exampleSelectGender">Category</label>
-                            <Select
-                            className={errors.categoryId?'is-invalid':""}
-                              options={stateCategories}
-                              value={selectedOption}
-                              onChange={this.handleChange}
-                              isInvalid={errors.categoryId}
-                            />
-                             <Form.Control.Feedback type="invalid">
-                              <strong>
-                                {errors.categoryId
-                                  ? errors.categoryId.msg
-                                  : ""}
-                              </strong>
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                        <div className="col-md-4">
-                          <Form.Group>
-                            <label htmlFor="game_access_token">
-                              Game Access Token
-                            </label>
-                            <Form.Control
-                              type="text"
-                              id="game_access_token"
-                              placeholder="Game Access Token"
-                              size="lg"
-                              name="game_access_token"
-                              value={game_access_token}
-                              isInvalid={errors.game_access_token}
-                              onChange={this.changeHandaler}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              <strong>
-                                {errors.game_access_token
-                                  ? errors.game_access_token.msg
-                                  : ""}
-                              </strong>
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                        <div className="col-md-4">
-                          <Form.Group>
-                            <label htmlFor="game_verify_token">
-                              Game Verify Token
-                            </label>
-                            <Form.Control
-                              type="text"
-                              id="game_verify_token"
-                              placeholder="Game Verify Token"
-                              size="lg"
-                              name="game_verify_token"
-                              value={game_verify_token}
-                              isInvalid={errors.game_verify_token}
-                              onChange={this.changeHandaler}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              <strong>
-                                {errors.game_verify_token
-                                  ? errors.game_verify_token.msg
-                                  : ""}
-                              </strong>
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
-                        <div className="col-md-8">
-                          <Form.Group>
-                            <label htmlFor="description">Description</label>
-                            <Form.Control
-                              as="textarea"
-                              id="description"
-                              rows={5}
-                              size="lg"
-                              placeholder="Description"
-                              name="description"
-                              value={description}
-                              isInvalid={errors.description}
-                              onChange={this.changeHandaler}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              <strong>
-                                {errors.description ? errors.description.msg : ""}
-                              </strong>
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </div>
+      title,
+      subTitle,
+      buttonTitle,
+      imageUrl,
+      messageTime,
+      position,
+      data,
+    } = this.state.botMessage;
+    if (isLoading) {
+      return <Spinner />;
+    } else {
+      return (
+        <div>
+          <div className="page-header">
+            <h3 className="page-title"> Add Bot Message </h3>
+            <nav aria-label="breadcrumb">
+              <Button onClick={this.viewGames}>View Games</Button>
+            </nav>
+          </div>
+          <div className="row">
+            <div className="col-md-12 grid-margin stretch-card">
+              <div className="card">
+                <div className="card-body">
+                  <SuccessMessage message={message} />
+                  <Form
+                    className="forms-sample "
+                    onSubmit={this.submitHandaler}
+                  >
+                    <div className="row">
+                      <div className="col-md-4">
+                        <Form.Group>
+                          <label htmlFor="title">Title</label>
+                          <Form.Control
+                            type="text"
+                            id="title"
+                            placeholder="Title"
+                            size="lg"
+                            name="title"
+                            value={title}
+                            isInvalid={errors.title}
+                            onChange={this.changeHandaler}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            <strong>
+                              {errors.title ? errors.title.msg : ""}
+                            </strong>
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                      <div className="col-md-4">
+                        <Form.Group>
+                          <label htmlFor="subTitle">Sub Title</label>
+                          <Form.Control
+                            type="text"
+                            id="subTitle"
+                            name="subTitle"
+                            value={subTitle}
+                            placeholder="Sub Title"
+                            size="lg"
+                            isInvalid={errors.subTitle}
+                            onChange={this.changeHandaler}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            <strong>
+                              {errors.subTitle ? errors.subTitle.msg : ""}
+                            </strong>
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                      <div className="col-md-4">
+                        <Form.Group>
+                          <label htmlFor="buttonTitle">Button Title</label>
+                          <Form.Control
+                            type="text"
+                            id="buttonTitle"
+                            placeholder="Button Title"
+                            size="lg"
+                            name="buttonTitle"
+                            value={buttonTitle}
+                            isInvalid={errors.buttonTitle}
+                            onChange={this.changeHandaler}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            <strong>
+                              {errors.buttonTitle ? errors.buttonTitle.msg : ""}
+                            </strong>
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                      <div className="col-md-4">
+                        <Form.Group>
+                          <label htmlFor="imageUrl">Image URL</label>
+                          <Form.Control
+                            type="text"
+                            id="imageUrl"
+                            placeholder="Image URL"
+                            size="lg"
+                            name="imageUrl"
+                            value={imageUrl}
+                            isInvalid={errors.imageUrl}
+                            onChange={this.changeHandaler}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            <strong>
+                              {errors.imageUrl ? errors.imageUrl.msg : ""}
+                            </strong>
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                      <div className="col-md-4">
+                        <Form.Group>
+                          <label htmlFor="messageTime">Message Time</label>
+                          <Form.Control
+                            type="text"
+                            id="messageTime"
+                            placeholder="Message Time"
+                            size="lg"
+                            name="messageTime"
+                            value={messageTime}
+                            isInvalid={errors.messageTime}
+                            onChange={this.changeHandaler}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            <strong>
+                              {errors.messageTime ? errors.messageTime.msg : ""}
+                            </strong>
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                      <div className="col-md-4">
+                        <Form.Group>
+                          <label htmlFor="position">Position</label>
+                          <Form.Control
+                            type="text"
+                            id="position"
+                            placeholder="Position"
+                            size="lg"
+                            name="position"
+                            value={position}
+                            isInvalid={errors.position}
+                            onChange={this.changeHandaler}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            <strong>
+                              {errors.position ? errors.position.msg : ""}
+                            </strong>
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                      <div className="col-md-12">
+                        <Form.Group>
+                          <label htmlFor="data">Data</label>
+                          <Form.Control
+                            as="textarea"
+                            id="data"
+                            rows={5}
+                            size="lg"
+                            placeholder="Data"
+                            name="data"
+                            value={data}
+                            isInvalid={errors.data}
+                            onChange={this.changeHandaler}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            <strong>
+                              {errors.data ? errors.data.msg : ""}
+                            </strong>
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                      <div className="col-md-12">
                         <button type="submit" className="btn btn-primary mr-2">
-                          Add Game
+                          Add Bot Message
                         </button>
                       </div>
-                    </Form>
-                  </div>
+                    </div>
+                  </Form>
                 </div>
               </div>
             </div>
           </div>
-        );
-  
-      }
+        </div>
+      );
+    }
   }
 }
 const mapStateToProps = (state) => ({
-  game: state.game,
+  botMessage: state.botMessage,
   auth: state.auth,
 });
 
-export default withRouter(connect(mapStateToProps, { catgeories, gameAdd })(BotMessageAdd));
+export default withRouter(
+  connect(mapStateToProps, { botMessageAdd })(BotMessageAdd)
+);
