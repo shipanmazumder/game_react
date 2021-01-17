@@ -7,7 +7,7 @@ const p = path.join(
     "log.json"
 );
 exports.webHookGet = (req, res, next) => {
-    // console.log(req.body);
+    console.log(req.body);
     fs.writeFile('log.json', "ss", function (err) {
         if (err) throw err;
         console.log('Saved!');
