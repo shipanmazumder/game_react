@@ -6,11 +6,20 @@ const LeaderBoard=new Schema({
     score:{
         type:Number
     },
-    game_level:{
+    user_game_level:{
+        type:Number
+    },
+    user_xp:{
         type:Number
     },
     last_update_time:{
         type:Date
+    }
+});
+const Friends=new Schema({
+    game_user_id:{
+        type:Schema.Types.ObjectId,
+        ref:"GameUser"
     }
 });
 const gameUsersSchema=new Schema({
@@ -19,6 +28,7 @@ const gameUsersSchema=new Schema({
         ref:"Game",
         index: true
     },
+    firends:[Friends],
     name:{
         type:String
     },
@@ -43,9 +53,6 @@ const gameUsersSchema=new Schema({
     },
     next_message_time:{
         type:Date
-    },
-    last_message_position:{
-        type:String
     },
     message_count:{
         type:Number,

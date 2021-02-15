@@ -1,1 +1,1 @@
-{}
+{"hub.mode":"subscribe","hub.challenge":"401393207","hub.verify_token":"test"}
