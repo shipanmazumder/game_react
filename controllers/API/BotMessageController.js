@@ -34,48 +34,51 @@ exports.webHookPost = (req, res, next) => {
         let game_id = webhook_event.game_play.game_id;
         let user_id = webhook_event.game_play.player_id;
         console.log(user_id)
-        // Game.findOne({ app_id: game_id })
-        //   .then((game) => {
-        //     GameUser.findOne({ user_unique_id: user_id })
-        //       .then((user) => {
-        //         if (user) {
-        //           user.sender_id = sender_psid;
-        //           user.message_count = 0;
-        //           user.save();
-        //           // var old_job = schedule.scheduledJobs[`botMessage_${user_id}`];
-        //           //   old_job.cancel();
-        //           startMessageShedule(game_id, user_id, sender_psid);
-        //         }else{
-        //           let newUser=new GameUser({
-        //             sender_id:sender_psid,
-        //             message_count:0,
-        //             user_unique_id:user_id,
-        //             game_id:game_id,
-        //             firends:[],
-        //             leaderBoard:{
-        //               score:0,
-        //               user_game_level:0,
-        //               user_xp:0,
-        //               last_update_time:new Date(Date.now())
-        //             }
-        //           })
-        //           newUser.save();
+        Game.findOne({ app_id: game_id })
+          .then((game) => {
+            GameUser.findOne({ user_unique_id: user_id })
+              .then((user) => {
+                if (user) {
+                  user.sender_id = sender_psid;
+                  user.message_count = 0;
+                  user.save();
+                  // var old_job = schedule.scheduledJobs[`botMessage_${user_id}`];
+                  //   old_job.cancel();
+                  startMessageShedule(game_id, user_id, sender_psid);
                   
-        //           // startMessageShedule(game_id, user_id, sender_psid);
-        //           res.status(200).send("EVENT_RECEIVED");
-        //         }
-        //       })
-        //       .catch((err) => {
-        //         const error = new Error(err);
-        //         error.httpStatusCode = 500;
-        //         return next(error);
-        //       });
-        //   })
-        //   .catch((error) => {
-        //     const error = new Error(err);
-        //     error.httpStatusCode = 500;
-        //     return next(error);
-        //   });
+                  return res.status(200).send("EVENT_RECEIVED");
+                }else{
+                  let newUser=new GameUser({
+                    sender_id:sender_psid,
+                    message_count:0,
+                    user_unique_id:user_id,
+                    game_id:game_id,
+                    firends:[],
+                    leaderBoard:{
+                      score:0,
+                      user_game_level:0,
+                      user_xp:0,
+                      last_update_time:new Date(Date.now())
+                    }
+                  })
+                  newUser.save();
+                  
+                  startMessageShedule(game_id, user_id, sender_psid);
+                }
+                
+                res.status(200).send("EVENT_RECEIVED");
+              })
+              .catch((err) => {
+                const error = new Error(err);
+                error.httpStatusCode = 500;
+                return next(error);
+              });
+          })
+          .catch((error) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+          });
       }
     });
   } else {
