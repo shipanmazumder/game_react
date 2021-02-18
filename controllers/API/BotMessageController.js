@@ -3,6 +3,7 @@ const { async } = require("crypto-random-string");
 const nodeSchedule = require("node-schedule");
 const axios = require("axios");
 const Game = require("../../models/Game");
+const GameUser = require("../../models/GameUser");
 
 exports.webHookGet = (req, res, next) => {
   let mode = req.query["hub.mode"];
@@ -40,6 +41,7 @@ exports.webHookPost = (req, res, next) => {
             }
             GameUser.findOne({ user_unique_id: user_id })
               .then((user) => {
+                console.log(user)
                 if (user) {
                   user.sender_id = sender_psid;
                   user.message_count = 0;
