@@ -157,6 +157,7 @@ let sendMessage = (message,user,game,sender_id) => {
     "json": request_body
 }, (err, res, body) => {
     if (!err) {
+      console.log(body);
         console.log('message sent!  Id: ' + sender_id)
     } else {
         console.error("Unable to send message:" + err);
