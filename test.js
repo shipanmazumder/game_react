@@ -1,12 +1,9 @@
-var messages=[
-  {
-    name:"shipan",
-    position:1
-  },
-  {
-    name:"aka",
-    position:2
-  }
-]
-let message=messages.find((message)=>message.position>0)
-console.log(message)
+const schedule = require('node-schedule');
+
+const job = schedule.scheduleJob("test","* * * * * *", function(){
+  console.log('The answer to life, the universe, and everything!');
+});
+setTimeout(()=>{
+  var my_job = schedule.scheduledJobs["test"];
+  my_job.cancel();
+},3000 );

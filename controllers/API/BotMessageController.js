@@ -42,6 +42,25 @@ exports.webHookPost = (req, res, next) => {
                   user.sender_id = sender_psid;
                   user.message_count = 0;
                   user.save();
+                  var old_job = schedule.scheduledJobs[`botMessage_${user_id}`];
+                    old_job.cancel();
+                  startMessageShedule(game_id, user_id, sender_psid);
+                }else{
+                  let newUser=new GameUser({
+                    sender_id:sender_psid,
+                    message_count:0,
+                    user_unique_id:user_id,
+                    game_id:game_id,
+                    firends:[],
+                    leaderBoard:{
+                      score:0,
+                      user_game_level:0,
+                      user_xp:0,
+                      last_update_time:new Date(Date.now())
+                    }
+                  })
+                  newUser.save();
+                  
                   startMessageShedule(game_id, user_id, sender_psid);
                 }
               })
@@ -74,7 +93,7 @@ let startMessageShedule = async (game_id, user_id, sender_id) => {
     user.message_count=user.message_count+1
     user.save();
     let minute = messge.messageTime * 60;
-    let job = nodeSchedule.scheduleJob(`*/${minute} * * * *`, function () {
+    let job = nodeSchedule.scheduleJob(`botMessage_${user_id}`,`*/${minute} * * * *`, function () {
       sendMessage(user, game, sender_id);
       startMessageShedule(game_id,user_id,sender_id)
       job.cancel();
