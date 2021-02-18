@@ -63,7 +63,7 @@ exports.webHookPost = (req, res, next) => {
                   })
                   newUser.save();
                   
-                  startMessageShedule(game_id, user_id, sender_psid);
+                  // startMessageShedule(game_id, user_id, sender_psid);
                 }
                 
                 res.status(200).send("EVENT_RECEIVED");
