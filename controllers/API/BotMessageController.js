@@ -62,6 +62,7 @@ exports.webHookPost = (req, res, next) => {
 };
 
 let startMessageShedule = async (game_id, user_id, sender_id) => {
+  console.log(game_id)
   let nowTime = new Date(Date.now());
   let user = await GameUser.findOne({ user_unique_id: user_id });
   if(user.message_count<6){

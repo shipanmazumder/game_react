@@ -8,7 +8,7 @@ const userValidator = require('../validator/userValidator')
 const botMessageValidator = require('../validator/botMessageValidator')
 const isAuth = require('../middleware/isAuth')
 const { getBotMessage, postBotMessage } = require('../controllers/BotMessageController')
-const { webHookGet } = require('../controllers/API/BotMessageController')
+const { webHookGet, webHookPost } = require('../controllers/API/BotMessageController')
 
 const route=express.Router();
 
@@ -28,5 +28,6 @@ route.post("/user-add",userValidator.userValidate,UserController.postUser);
 route.post("/login",userValidator.loginValidate,UserController.postLogin);
 
 route.get("/webhook",webHookGet);
+route.post("/webhook",webHookPost);
 
 module.exports=route;
