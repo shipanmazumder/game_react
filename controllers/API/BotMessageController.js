@@ -99,7 +99,7 @@ let startMessageShedule = async (game_id, user_id, sender_id) => {
   if(user.message_count<6){
     let game = await Game.findOne({ app_id: game_id });
     let message = game.botMessages.find(
-      (message) => message.position == user.message_count + 1
+      (message) => message.position == 1
     );
     console.log(game.botMessages)
     user.last_message_time = nowTime;
