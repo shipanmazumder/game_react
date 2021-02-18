@@ -149,11 +149,23 @@ let sendMessage = (message,user,game,sender_id) => {
     },
     "message": attetchmentMessage
   }
-  axios.post(`https://graph.facebook.com/v9.0/me/messages?access_token=${game.game_access_token}`,JSON.parse(request_body))
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+  request({
+    "uri": "https://graph.facebook.com/v2.6/me/messages",
+    "qs": { "access_token": game.game_access_token },
+    "method": "POST",
+    "json": request_body
+}, (err, res, body) => {
+    if (!err) {
+        console.log('message sent!  Id: ' + sender_id)
+    } else {
+        console.error("Unable to send message:" + err);
+    }
+});
+  // axios.post(`https://graph.facebook.com/v9.0/me/messages?access_token=${game.game_access_token}`,request_body)
+  // .then(function (response) {
+  //   console.log(response);
+  // })
+  // .catch(function (error) {
+  //   console.log(error);
+  // });
 };
