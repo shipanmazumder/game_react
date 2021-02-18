@@ -101,7 +101,7 @@ let startMessageShedule = async (game_id, user_id, sender_id) => {
     let message = game.botMessages.find(
       (message) => message.position == user.message_count + 1
     );
-    console.log(message)
+    console.log(game.botMessages)
     user.last_message_time = nowTime;
     user.message_count=user.message_count+1
     user.save();
