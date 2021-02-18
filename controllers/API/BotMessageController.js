@@ -56,7 +56,7 @@ exports.webHookPost = (req, res, next) => {
                     sender_id:sender_psid,
                     message_count:0,
                     user_unique_id:user_id,
-                    game_id:game_id,
+                    game_id:game._id,
                     firends:[],
                     leaderBoard:{
                       score:0,
