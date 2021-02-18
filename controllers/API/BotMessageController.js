@@ -136,7 +136,9 @@ let sendMessage = (message,user,game,sender_id) => {
               {
                 type: "game_play",
                 title: message.buttonTitle,
-                playload: JSON.stringify(message.data),
+                "payload": JSON.stringify({
+                  "bot_data": 0
+              })
               },
             ],
           },
