@@ -45,12 +45,16 @@ exports.webHookPost = (req, res, next) => {
                 if (user) {
                   user.sender_id = sender_psid;
                   user.message_count = 0;
-                  user.save();
+                  user.save().then((result)=>{
+                    startMessageShedule(game_id, user_id, sender_psid);
+                    return res.status(200).send("EVENT_RECEIVED");
+                  }).catch((err)=>{
+                    const error = new Error(err);
+                    error.httpStatusCode = 500;
+                    return next(error)
+                  });
                   // var old_job = nodeSchedule.scheduledJobs[`botMessage_${user_id}`];
                   //   old_job.cancel();
-                  startMessageShedule(game_id, user_id, sender_psid);
-                  
-                  return res.status(200).send("EVENT_RECEIVED");
                 }else{
                   let newUser=new GameUser({
                     sender_id:sender_psid,
