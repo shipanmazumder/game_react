@@ -145,7 +145,7 @@ let sendMessage = (message,user,game,sender_id) => {
     },
     "message": attetchmentMessage
   }
-  axios.post(`https://graph.facebook.com/v2.6/me/messages?access_token=${game.game_access_token}`,request_body)
+  axios.post(`https://graph.facebook.com/v9.0/me/messages?access_token=${game.game_access_token}`,JSON.parse(request_body))
   .then(function (response) {
     console.log(response);
   })
