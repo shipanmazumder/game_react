@@ -35,7 +35,6 @@ exports.webHookPost = (req, res, next) => {
         let user_id = webhook_event.game_play.player_id;
         Game.findOne({ app_id: game_id })
           .then((game) => {
-            console.log(game)
             if(!game){
              return res.sendStatus(404);
             }
