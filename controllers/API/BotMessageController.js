@@ -63,9 +63,14 @@ exports.webHookPost = (req, res, next) => {
                   newUser.save();
                   
                   startMessageShedule(game_id, user_id, sender_psid);
+                  res.status(200).send("EVENT_RECEIVED");
                 }
               })
-              .catch((error) => {});
+              .catch((err) => {
+                const error = new Error(err);
+                error.httpStatusCode = 500;
+                return next(error);
+              });
           })
           .catch((error) => {
             const error = new Error(err);
@@ -74,9 +79,6 @@ exports.webHookPost = (req, res, next) => {
           });
       }
     });
-
-    // Returns a '200 OK' response to all requests
-    res.status(200).send("EVENT_RECEIVED");
   } else {
     // Returns a '404 Not Found' if event is not from a page subscription
     res.sendStatus(404);
