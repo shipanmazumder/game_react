@@ -25,6 +25,7 @@ exports.webHookGet = (req, res, next) => {
 };
 exports.webHookPost = (req, res, next) => {
   let body = req.body;
+  console.log(body)
 
   // Checks this is an event from a page subscription
   if (body.object === "page") {
