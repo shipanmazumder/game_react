@@ -46,8 +46,8 @@ exports.webHookPost = (req, res, next) => {
                   user.sender_id = sender_psid;
                   user.message_count = 0;
                   user.save();
-                  var old_job = schedule.scheduledJobs[`botMessage_${user_id}`];
-                    old_job.cancel();
+                  // var old_job = nodeSchedule.scheduledJobs[`botMessage_${user_id}`];
+                  //   old_job.cancel();
                   startMessageShedule(game_id, user_id, sender_psid);
                   
                   return res.status(200).send("EVENT_RECEIVED");
@@ -98,21 +98,21 @@ let startMessageShedule = async (game_id, user_id, sender_id) => {
   let user = await GameUser.findOne({ user_unique_id: user_id });
   if(user.message_count<6){
     let game = await Game.findOne({ app_id: game_id });
-    let messge = game.botMessages.find(
+    let message = game.botMessages.find(
       (message) => message.position == user.message_count + 1
     );
     user.last_message_time = nowTime;
     user.message_count=user.message_count+1
     user.save();
-    let minute = messge.messageTime * 60;
+    let minute = message.messageTime * 60;
     let job = nodeSchedule.scheduleJob(`botMessage_${user_id}`,`*/1 * * * *`, function () {
-      sendMessage(user, game, sender_id);
+      sendMessage(message,user, game, sender_id);
       startMessageShedule(game_id,user_id,sender_id)
       job.cancel();
     });
   }
 };
-let sendMessage = (user,game,sender_id) => {
+let sendMessage = (message,user,game,sender_id) => {
   let attetchmentMessage = {
     attachment: {
       type: "template",
