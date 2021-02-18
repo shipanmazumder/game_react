@@ -33,10 +33,12 @@ exports.webHookPost = (req, res, next) => {
       if (webhook_event.hasOwnProperty("game_play")) {
         let game_id = webhook_event.game_play.game_id;
         let user_id = webhook_event.game_play.player_id;
-        console.log(user_id)
         Game.findOne({ app_id: game_id })
           .then((game) => {
-            console.log(game)
+            console.log("hello")
+            if(!game){
+             return res.sendStatus(404);
+            }
             res.status(200).send("EVENT_RECEIVED");
             // GameUser.findOne({ user_unique_id: user_id })
             //   .then((user) => {
@@ -77,9 +79,7 @@ exports.webHookPost = (req, res, next) => {
             //   });
           })
           .catch((error) => {
-            const error = new Error(err);
-            error.httpStatusCode = 500;
-            return next(error);
+            res.sendStatus(500);
           });
       }
     });
