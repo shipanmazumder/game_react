@@ -65,9 +65,14 @@ exports.webHookPost = (req, res, next) => {
                       last_update_time:new Date(Date.now())
                     }
                   })
-                  newUser.save();
-                 startMessageShedule(game_id, user_id, sender_psid);
-                 res.status(200).send("EVENT_RECEIVED");
+                  newUser.save().then((result)=>{
+                    startMessageShedule(game_id, user_id, sender_psid);
+                    res.status(200).send("EVENT_RECEIVED");
+                  }).catch((err)=>{
+                    const error = new Error(err);
+                    error.httpStatusCode = 500;
+                    return next(error)
+                  });
                 }
               })
               .catch((err) => {
