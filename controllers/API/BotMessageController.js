@@ -67,7 +67,9 @@ exports.webHookPost = (req, res, next) => {
               .catch((error) => {});
           })
           .catch((error) => {
-            res.sendStatus(505);
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
           });
       }
     });
