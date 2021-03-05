@@ -9,6 +9,7 @@ const botMessageValidator = require('../validator/botMessageValidator')
 const isAuth = require('../middleware/isAuth')
 const { getBotMessage, postBotMessage } = require('../controllers/BotMessageController')
 const { webHookGet, webHookPost } = require('../controllers/API/BotMessageController')
+const { globalLeaderBoard } = require('../controllers/LeaderBoardController')
 
 const route=express.Router();
 
@@ -23,6 +24,7 @@ route.get("/bot-messages",isAuth,getBotMessage);
 route.post("/add-bot-message",isAuth,botMessageValidator,postBotMessage);
 
 route.post("/game-user-add",GameUserController.postGameUser);
+route.get("/show-leaderboard",globalLeaderBoard);
 
 route.post("/user-add",userValidator.userValidate,UserController.postUser);
 route.post("/login",userValidator.loginValidate,UserController.postLogin);

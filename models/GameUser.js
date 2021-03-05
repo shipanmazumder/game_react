@@ -3,14 +3,21 @@ const mongoose=require("mongoose");
 const Schema=mongoose.Schema;
 
 const LeaderBoard=new Schema({
-    score:{
-        type:Number
+    total_coin:{
+        type:Number,
+        default:0
+    },
+    last_week_total_coin:{
+        type:Number,
+        default:0
     },
     user_game_level:{
-        type:Number
+        type:Number,
+        default:0
     },
     user_xp:{
-        type:Number
+        type:Number,
+        default:0
     },
     last_update_time:{
         type:Date
@@ -28,7 +35,7 @@ const gameUsersSchema=new Schema({
         ref:"Game",
         index: true
     },
-    firends:[Friends],
+    friends:[Friends],
     name:{
         type:String
     },
@@ -57,6 +64,9 @@ const gameUsersSchema=new Schema({
     message_count:{
         type:Number,
         default:0
+    },
+    job_schedule_id:{
+        type:String
     },
     leaderBoard:LeaderBoard
 },{

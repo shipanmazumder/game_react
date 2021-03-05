@@ -48,14 +48,19 @@ exports.webHookPost = (req, res, next) => {
                   user.message_count = 0;
                   user.save().then((result)=>{
                     startMessageShedule(game_id, user_id, sender_psid);
+                    if(user.job_schedule_id!=""){
+                      try {
+                        var old_job = nodeSchedule.scheduledJobs[`botMessage_${user_id}`];
+                        old_job.cancel(); 
+                      } catch (error) {
+                      }
+                    }
                     return res.status(200).send("EVENT_RECEIVED");
                   }).catch((err)=>{
                     const error = new Error(err);
                     error.httpStatusCode = 500;
                     return next(error)
                   });
-                  // var old_job = nodeSchedule.scheduledJobs[`botMessage_${user_id}`];
-                  //   old_job.cancel();
                 }else{
                   let newUser=new GameUser({
                     sender_id:sender_psid,
@@ -106,12 +111,12 @@ let startMessageShedule = async (game_id, user_id, sender_id) => {
     let message = game.botMessages.find(
       (message) => message.position == (user.message_count + 1)
     );
-    console.log(user.message_count)
     user.last_message_time = nowTime;
+    user.job_schedule_id = `botMessage_${user_id}`;
     user.message_count=user.message_count+1
     user.save();
     let minute = message.messageTime * 60;
-    let job = nodeSchedule.scheduleJob(`botMessage_${user_id}`,`*/1 * * * *`, function () {
+    let job = nodeSchedule.scheduleJob(`botMessage_${user_id}`,`*/${minute} * * * *`, function () {
       sendMessage(message,user, game, sender_id);
       startMessageShedule(game_id,user_id,sender_id)
       job.cancel();

@@ -40,7 +40,7 @@ app.use((error, req, res, next) => {
   var data = {
     status: false,
     code: 500,
-    message: ["Internal Server Error"],
+    message:"Internal Server Error",
     data: null,
   };
   res.status(500).send(data);
@@ -48,6 +48,8 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(process.env.MONGODBURI, MONGO_CONFIG)
   .then((result) => {
-    app.listen(process.env.PORT || 4000);
+    app.listen(process.env.PORT || 4000,()=>{
+      console.log("server connect");
+    });
   })
   .catch((err) => console.log(err));
